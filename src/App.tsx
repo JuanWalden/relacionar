@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Header from './components/Header';
 import CycleVisualization from './components/CycleVisualization';
@@ -22,23 +22,19 @@ function App() {
     setActiveStep(null);
     setShowInfoPanel(false);
     
-    const animateSteps = () => {
-      steps.forEach((step, index) => {
-        setTimeout(() => {
-          setActiveStep(step);
-          setAnimationStep(index + 1);
-          setShowInfoPanel(true);
-          
-          if (index === steps.length - 1) {
-            setTimeout(() => {
-              setIsAnimating(false);
-            }, 2000);
-          }
-        }, index * 2500);
-      });
-    };
-    
-    animateSteps();
+    steps.forEach((step, index) => {
+      setTimeout(() => {
+        setActiveStep(step);
+        setAnimationStep(index + 1);
+        setShowInfoPanel(true);
+        
+        if (index === steps.length - 1) {
+          setTimeout(() => {
+            setIsAnimating(false);
+          }, 2000);
+        }
+      }, index * 2500);
+    });
   };
 
   const resetView = () => {

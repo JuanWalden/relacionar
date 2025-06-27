@@ -3,7 +3,6 @@ import { motion } from 'framer-motion';
 import { cycleStepsData } from '../data/cycleData';
 import { CycleStep } from '../types/anxiety';
 import CycleItem from './CycleItem';
-import ConnectionArrows from './ConnectionArrows';
 
 interface CycleVisualizationProps {
   activeStep: CycleStep | null;
@@ -59,9 +58,6 @@ const CycleVisualization: React.FC<CycleVisualizationProps> = ({
               <div>ANSIEDAD</div>
             </div>
           </motion.div>
-
-          {/* Flechas de conexión */}
-          <ConnectionArrows activeStep={activeStep} isAnimating={isAnimating} />
 
           {/* Elementos del ciclo */}
           {steps.map((step, index) => (
