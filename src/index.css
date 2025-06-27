@@ -1,0 +1,61 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  }
+  
+  body {
+    @apply bg-gradient-to-br from-slate-50 to-blue-50 min-h-screen;
+  }
+}
+
+@layer components {
+  .cycle-item {
+    @apply relative flex flex-col items-center justify-center p-4 rounded-2xl text-white font-semibold text-center cursor-pointer transition-all duration-300 shadow-lg hover:shadow-xl;
+  }
+  
+  .cycle-item:hover {
+    @apply scale-110 -translate-y-1;
+  }
+  
+  .cycle-item.active {
+    @apply scale-115 -translate-y-2 shadow-2xl ring-4 ring-white ring-opacity-50;
+  }
+  
+  .info-card {
+    @apply bg-white rounded-2xl p-6 shadow-lg border border-gray-100;
+  }
+  
+  .btn-primary {
+    @apply bg-primary-500 hover:bg-primary-600 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5;
+  }
+  
+  .btn-secondary {
+    @apply bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold py-3 px-6 rounded-xl transition-all duration-200 hover:shadow-md;
+  }
+}
+
+/* Animaciones personalizadas */
+.arrow-path {
+  stroke-dasharray: 1000;
+  stroke-dashoffset: 1000;
+  animation: drawArrow 2s ease-in-out forwards;
+}
+
+@keyframes drawArrow {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.floating {
+  animation: floating 3s ease-in-out infinite;
+}
+
+@keyframes floating {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
