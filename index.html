@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>El Ciclo de la Ansiedad - Infografía Interactiva</title>
+    <style>
+        :root {
+            --radius: 260px; /* Radio del círculo para posicionar los elementos */
+            --item-size: 140px; /* Tamaño de cada elemento del ciclo */
+            --center-size: 150px; /* Tamaño del círculo central */
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            color: #333;
+        }
+        
+        .infographic-container {
+            background: white;
+            border-radius: 30px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+            max-width: 1200px; /* Aumentado para dar espacio al panel */
+            width: 100%;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            transition: all 0.5s ease-in-out;
+        }
+
+        .main-content {
+            flex-grow: 1;
+            transition: all 0.5s ease-in-out;
+        }
+
+        /* Cuando el panel está activo, el contenido principal se adapta */
+        .infographic-container.panel-active .main-content {
+            transform: translateX(-15%);
+            width: 60%;
+        }
+        
+        .title {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .title h1 {
+            color: #2c3e50;
+            font-size: 32px;
+            margin-bottom: 5px;
+        }
+
+        /* Estilo para el nuevo subtítulo */
+        .title h2 {
+            color: #e74c3c;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+        
+        .title p {
+            color: #7f8c8d;
+            font-size: 18px;
+        }
+        
+        .cycle-wrapper {
+            position: relative;
+            width: calc(var(--radius) * 2 + var(--item-size));
+            height: calc(var(--radius) * 2 + var(--item-size));
+            margin: 20px auto;
+            transition: transform 0.5s ease-in-out;
+        }
+        
+        .center-circle {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: var(--center-size);
+            height: var(--center-size);
+            background: #e74c3c;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 18px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(231, 76, 60, 0.3);
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 10;
+        }
+        
+        .center-circle:hover {
+            transform: translate(-50%, -50%) scale(1.1);
+            box-shadow: 0 15px 40px rgba(231, 76, 60, 0.5);
+        }
+        
+        .cycle-item {
+            position: absolute;
+            top: calc(50% - var(--item-size) / 2);
+            left: calc(50% - var(--item-size) / 2);
+            width: var(--item-size);
+            height: var(--item-size);
+            border-radius: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            text-align: center;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Posicionamiento circular con transformaciones */
+        .trigger      { background: #e74c3c; transform: rotate(-90deg) translateX(var(--radius)) rotate(90deg); }
+        .thought      { background: #3498db; transform: rotate(-30deg) translateX(var(--radius)) rotate(30deg); }
+        .symptom      { background: #e67e22; transform: rotate(30deg) translateX(var(--radius)) rotate(-30deg); }
+        .behavior     { background: #27ae60; transform: rotate(90deg) translateX(var(--radius)) rotate(-90deg); }
+        .consequence  { background: #9b59b6; transform: rotate(150deg) translateX(var(--radius)) rotate(-150deg); }
+        .reinforcement{ background: #34495e; transform: rotate(210deg) translateX(var(--radius)) rotate(-210deg); }
+
+        /* Efecto Hover: empuja el elemento hacia afuera */
+        .trigger:hover       { z-index: 5; transform: rotate(-90deg) translateX(calc(var(--radius) + 10px)) rotate(90deg) scale(1.1); }
+        .thought:hover       { z-index: 5; transform: rotate(-30deg) translateX(calc(var(--radius) + 10px)) rotate(30deg) scale(1.1); }
+        .symptom:hover       { z-index: 5; transform: rotate(30deg) translateX(calc(var(--radius) + 10px)) rotate(-30deg) scale(1.1); }
+        .behavior:hover      { z-index: 5; transform: rotate(90deg) translateX(calc(var(--radius) + 10px)) rotate(-90deg) scale(1.1); }
+        .consequence:hover   { z-index: 5; transform: rotate(150deg) translateX(calc(var(--radius) + 10px)) rotate(-150deg) scale(1.1); }
+        .reinforcement:hover { z-index: 5; transform: rotate(210deg) translateX(calc(var(--radius) + 10px)) rotate(-210deg) scale(1.1); }
+        
+        /* Efecto Activo: empuja aún más y destaca */
+        .cycle-item.active { z-index: 6; box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3); }
+        .trigger.active       { transform: rotate(-90deg) translateX(calc(var(--radius) + 20px)) rotate(90deg) scale(1.15); }
+        .thought.active       { transform: rotate(-30deg) translateX(calc(var(--radius) + 20px)) rotate(30deg) scale(1.15); }
+        .symptom.active       { transform: rotate(30deg) translateX(calc(var(--radius) + 20px)) rotate(-30deg) scale(1.15); }
+        .behavior.active      { transform: rotate(90deg) translateX(calc(var(--radius) + 20px)) rotate(-90deg) scale(1.15); }
+        .consequence.active   { transform: rotate(150deg) translateX(calc(var(--radius) + 20px)) rotate(-150deg) scale(1.15); }
+        .reinforcement.active { transform: rotate(210deg) translateX(calc(var(--radius) + 20px)) rotate(-210deg) scale(1.15); }
+
+        .cycle-item .icon { font-size: 30px; margin-bottom: 8px; }
+        .cycle-item .label { font-size: 14px; line-height: 1.2; }
+        
+        /* Flechas de conexión */
+        .feedback-arrows {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+        }
+
+        .arrow {
+            stroke: #95a5a6;
+            stroke-width: 3;
+            fill: none;
+            opacity: 0.6;
+            transition: all 0.3s;
+        }
+        
+        .arrow.active { stroke: #2c3e50; stroke-width: 5; opacity: 1; }
+        .arrow-marker { fill: #95a5a6; transition: fill 0.3s; }
+        .arrow.active .arrow-marker { fill: #2c3e50; }
+        
+        /* Panel de información */
+        .info-panel {
+            position: absolute;
+            right: -450px; /* Posición inicial fuera de la pantalla */
+            top: 50%;
+            transform: translateY(-50%);
+            width: 400px;
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: right 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            z-index: 100;
+        }
+        
+        .infographic-container.panel-active .info-panel {
+            right: 40px; /* Posición final cuando está activo */
+        }
+        
+        .info-panel h3 { color: #2c3e50; margin-bottom: 15px; display: flex; align-items: center; gap: 10px; }
+        .info-panel .icon { font-size: 24px; }
+        .info-panel p { color: #7f8c8d; line-height: 1.6; margin-bottom: 15px; }
+        .info-panel .examples { background: #ecf0f1; border-radius: 10px; padding: 15px; margin-bottom: 15px; }
+        .info-panel .examples h4 { color: #34495e; margin-bottom: 8px; font-size: 14px; }
+        .info-panel .examples ul { list-style: none; font-size: 13px; color: #7f8c8d; }
+        .info-panel .examples li { margin-bottom: 5px; padding-left: 15px; position: relative; }
+        .info-panel .examples li:before { content: "▸"; position: absolute; left: 0; color: #e74c3c; }
+        
+        .pulse { animation: pulse 2s infinite; }
+        @keyframes pulse {
+            0% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+            50% { transform: translate(-50%, -50%) scale(1.05); opacity: 0.8; }
+            100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+        }
+        
+        .legend { display: flex; justify-content: center; gap: 20px; margin-top: 30px; flex-wrap: wrap; }
+        .legend-item { display: flex; align-items: center; gap: 8px; font-size: 14px; color: #7f8c8d; }
+        .legend-color { width: 20px; height: 20px; border-radius: 5px; }
+        
+        .controls { text-align: center; margin-top: 30px; }
+        .control-btn {
+            padding: 10px 20px; margin: 0 10px; border: none; border-radius: 10px;
+            background: #3498db; color: white; font-weight: 600; cursor: pointer;
+            transition: all 0.3s;
+        }
+        .control-btn:hover { background: #2980b9; transform: translateY(-2px); box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3); }
+        
+        @media (max-width: 1200px) {
+            .infographic-container { flex-direction: column; }
+            .infographic-container.panel-active .main-content { transform: none; width: 100%; }
+            .info-panel {
+                position: relative;
+                width: 90%;
+                max-width: 450px;
+                right: auto;
+                top: auto;
+                transform: none;
+                margin-top: 30px;
+                opacity: 0;
+                max-height: 0;
+                padding-top: 0; padding-bottom: 0;
+                transition: all 0.6s ease-in-out;
+            }
+            .infographic-container.panel-active .info-panel {
+                opacity: 1;
+                max-height: 500px; /* Altura suficiente para el contenido */
+                padding-top: 30px; padding-bottom: 30px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            :root { --radius: 180px; --item-size: 110px; }
+            .cycle-item .label { font-size: 12px; }
+            .cycle-item .icon { font-size: 24px; }
+            .title h1 { font-size: 28px; }
+            .title h2 { font-size: 16px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="infographic-container" id="infographicContainer">
+        <div class="main-content">
+            <div class="title">
+                <h1>El Ciclo de Retroalimentación de la Ansiedad</h1>
+                <h2>Taller de Regulación Emocional. Juan Orta</h2>
+                <p>Cómo cada elemento refuerza y multiplica el siguiente.</p>
+            </div>
+        
+            <div class="cycle-wrapper">
+                <svg class="feedback-arrows" viewBox="0 0 660 660">
+                    <defs>
+                        <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                            <polygon points="0 0, 10 3.5, 0 7" class="arrow-marker" />
+                        </marker>
+                    </defs>
+                    
+                    <path class="arrow" id="arrow1" d="M 450 160 C 490 220, 480 290, 450 330" marker-end="url(#arrowhead)" />
+                    <path class="arrow" id="arrow2" d="M 450 390 C 440 450, 380 490, 330 490" marker-end="url(#arrowhead)" />
+                    <path class="arrow" id="arrow3" d="M 270 490 C 210 490, 170 450, 170 390" marker-end="url(#arrowhead)" />
+                    <path class="arrow" id="arrow4" d="M 170 330 C 140 290, 130 220, 170 160" marker-end="url(#arrowhead)" />
+                    <path class="arrow" id="arrow5" d="M 210 130 C 260 130, 300 130, 330 130" marker-end="url(#arrowhead)" />
+                    
+                    <path class="arrow" id="feedback1" d="M 200 450 Q 100 330 200 200" stroke-dasharray="8,8" marker-end="url(#arrowhead)" />
+                    <path class="arrow" id="feedback2" d="M 450 200 Q 550 330 450 450" stroke-dasharray="8,8" marker-end="url(#arrowhead)" />
+                </svg>
+                
+                <div class="center-circle pulse" onclick="startAnimation()">
+                    TU<br>ANSIEDAD
+                </div>
+                
+                <div class="cycle-item trigger" onclick="showInfo('trigger')">
+                    <div class="icon">⚡</div> <div class="label">DISPARADOR</div>
+                </div>
+                <div class="cycle-item thought" onclick="showInfo('thought')">
+                    <div class="icon">💭</div> <div class="label">PENSAMIENTO CATASTRÓFICO</div>
+                </div>
+                <div class="cycle-item symptom" onclick="showInfo('symptom')">
+                    <div class="icon">💓</div> <div class="label">SÍNTOMAS FÍSICOS</div>
+                </div>
+                <div class="cycle-item behavior" onclick="showInfo('behavior')">
+                    <div class="icon">🔍</div> <div class="label">CONDUCTAS DE SEGURIDAD</div>
+                </div>
+                <div class="cycle-item consequence" onclick="showInfo('consequence')">
+                    <div class="icon">🔄</div> <div class="label">CONSECUENCIAS</div>
+                </div>
+                <div class="cycle-item reinforcement" onclick="showInfo('reinforcement')">
+                    <div class="icon">➕</div> <div class="label">REFORZAMIENTO</div>
+                </div>
+            </div>
+            
+            <div class="legend">
+                <div class="legend-item"><div class="legend-color" style="background: #e74c3c;"></div><span>Disparador</span></div>
+                <div class="legend-item"><div class="legend-color" style="background: #3498db;"></div><span>Proceso mental</span></div>
+                <div class="legend-item"><div class="legend-color" style="background: #e67e22;"></div><span>Respuesta física</span></div>
+                <div class="legend-item"><div class="legend-color" style="background: #27ae60;"></div><span>Acción</span></div>
+                <div class="legend-item"><div class="legend-color" style="background: #9b59b6;"></div><span>Resultado</span></div>
+                <div class="legend-item"><div class="legend-color" style="background: #34495e;"></div><span>Refuerzo</span></div>
+            </div>
+            
+            <div class="controls">
+                <button class="control-btn" onclick="startAnimation()">Ver animación completa</button>
+                <button class="control-btn" onclick="resetView()">Reiniciar vista</button>
+            </div>
+        </div>
+
+        <div class="info-panel" id="infoPanel">
+            <h3><span class="icon" id="panelIcon">ℹ️</span> <span id="panelTitle">Información</span></h3>
+            <p id="panelDescription">Haz clic en cualquier elemento del ciclo para ver más detalles.</p>
+            <div class="examples" id="panelExamples" style="display: none;">
+                <h4>Ejemplos comunes:</h4>
+                <ul id="examplesList"></ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const cycleData = {
+            trigger: {
+                icon: '⚡', title: 'Disparador',
+                description: 'Cualquier sensación corporal, información o situación que inicia el ciclo de ansiedad.',
+                examples: ['Notar el latido del corazón', 'Sentir un mareo leve', 'Leer sobre una enfermedad', 'Ver un lunar nuevo', 'Sentir un dolor de cabeza']
+            },
+            thought: {
+                icon: '💭', title: 'Pensamiento Catastrófico',
+                description: 'La mente interpreta la sensación como una señal de peligro grave e inminente.',
+                examples: ['"Esto debe ser un infarto"', '"Seguro que tengo cáncer"', '"Me voy a desmayar"', '"Algo terrible está pasando"', '"Voy a morir"']
+            },
+            symptom: {
+                icon: '💓', title: 'Síntomas Físicos',
+                description: 'El cuerpo reacciona al miedo con síntomas de ansiedad que se suman a las sensaciones iniciales.',
+                examples: ['Taquicardia', 'Sudoración', 'Temblores', 'Sensación de ahogo', 'Tensión muscular']
+            },
+            behavior: {
+                icon: '🔍', title: 'Conductas de Seguridad',
+                description: 'Acciones que realizas para reducir la ansiedad a corto plazo, pero que mantienen el problema a largo plazo.',
+                examples: ['Tomarse el pulso repetidamente', 'Buscar síntomas en Google', 'Ir a urgencias', 'Pedir tranquilización', 'Evitar actividades']
+            },
+            consequence: {
+                icon: '🔄', title: 'Consecuencias',
+                description: 'Alivio temporal seguido de más dudas y mayor sensibilización a las sensaciones corporales.',
+                examples: ['Alivio que dura minutos', 'Nuevas dudas surgen', 'Mayor hipervigilancia', 'Dependencia de comprobaciones', 'Más ansiedad a largo plazo']
+            },
+            reinforcement: {
+                icon: '➕', title: 'Reforzamiento del Ciclo',
+                description: 'Cada vuelta al ciclo lo hace más fuerte y automático, creando un patrón que confirma tus peores miedos.',
+                examples: ['El cerebro "aprende" a temer sensaciones', 'Se reduce el umbral de alarma', 'Aumenta la frecuencia e intensidad', 'Se generaliza a más situaciones', 'Se vuelve automático']
+            }
+        };
+
+        let animationInterval;
+
+        const container = document.getElementById('infographicContainer');
+        const panel = document.getElementById('infoPanel');
+
+        function showInfo(type) {
+            const data = cycleData[type];
+            
+            document.getElementById('panelIcon').textContent = data.icon;
+            document.getElementById('panelTitle').textContent = data.title;
+            document.getElementById('panelDescription').textContent = data.description;
+            
+            const examplesList = document.getElementById('examplesList');
+            examplesList.innerHTML = data.examples.map(ex => `<li>${ex}</li>`).join('');
+            
+            document.getElementById('panelExamples').style.display = 'block';
+            container.classList.add('panel-active');
+            
+            // Highlight selected item
+            document.querySelectorAll('.cycle-item').forEach(item => item.classList.remove('active'));
+            document.querySelector(`.${type}`).classList.add('active');
+            
+            activateArrows(type);
+        }
+
+        function activateArrows(type) {
+            document.querySelectorAll('.arrow').forEach(arrow => arrow.classList.remove('active'));
+            
+            const arrowMap = {
+                trigger: ['arrow5'],
+                thought: ['arrow5', 'arrow1'],
+                symptom: ['arrow1', 'arrow2', 'feedback2'],
+                behavior: ['arrow2', 'arrow3'],
+                consequence: ['arrow3', 'arrow4', 'feedback1'],
+                reinforcement: ['arrow4', 'feedback1', 'feedback2']
+            };
+            
+            if (arrowMap[type]) {
+                arrowMap[type].forEach(arrowId => {
+                    const el = document.getElementById(arrowId);
+                    if (el) el.classList.add('active');
+                });
+            }
+        }
+
+        function startAnimation() {
+            resetView();
+            let currentStep = 0;
+            const steps = ['trigger', 'thought', 'symptom', 'behavior', 'consequence', 'reinforcement'];
+            
+            animationInterval = setInterval(() => {
+                if (currentStep < steps.length) {
+                    showInfo(steps[currentStep]);
+                    currentStep++;
+                } else {
+                    clearInterval(animationInterval);
+                    setTimeout(() => {
+                        document.querySelectorAll('.arrow').forEach(arrow => arrow.classList.add('active'));
+                    }, 500);
+                }
+            }, 2000);
+        }
+
+        function resetView() {
+            clearInterval(animationInterval);
+            document.querySelectorAll('.cycle-item').forEach(item => item.classList.remove('active'));
+            document.querySelectorAll('.arrow').forEach(arrow => arrow.classList.remove('active'));
+            container.classList.remove('panel-active');
+
+            // Ocultar info del panel
+            document.getElementById('panelTitle').textContent = 'Información';
+            document.getElementById('panelIcon').textContent = 'ℹ️';
+            document.getElementById('panelDescription').textContent = 'Haz clic en cualquier elemento del ciclo para ver más detalles.';
+            document.getElementById('panelExamples').style.display = 'none';
+        }
+
+        // Inicializar
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelector('.center-circle').classList.add('pulse');
+        });
+    </script>
+</body>
+</html>
